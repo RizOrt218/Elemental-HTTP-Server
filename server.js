@@ -1,6 +1,7 @@
 var http = require( 'http' );
 var fs = require( 'fs' );
-var url = require('url');
+var url = require( 'url' );
+var querystring = require( 'querystring' );
 
 
 var server = http.createServer( function ( req, socket, head ) {
@@ -8,14 +9,29 @@ var server = http.createServer( function ( req, socket, head ) {
   var uri = req.url;
 
   // console.log( req );
-  console.log( req.headers );
+  console.log( head );
   // console.log( req.url );
 
   if ( req.method === 'POST' ) {
     console.log( "post detected" );
     if ( uri === '/elements.html' ) {
       return fs.readFile( './public/helium.html' , function ( err , data ) {
-        return fs.writeFile( './public' + uri , data );
+        return fs.writeFile( './public' + uri , data , function( err, data ) {
+          return fs.readFile( './public' + uri , data , function( err, data ) {
+
+            console.log( data.toString() );
+            req.on( 'data', function( buffer ) {
+              var dataBuffer = querystring.parse( buffer.toString() );
+              console.log( dataBuffer );
+            });
+
+           socket.writeHead( 200, {
+            'Server' : 'Rizzi-lush',
+            'Content-length' : data.length
+          });
+          socket.end( data );
+          });
+        });
       });
     }
   }
