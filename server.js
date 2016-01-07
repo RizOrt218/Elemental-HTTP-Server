@@ -5,35 +5,24 @@ var querystring = require( 'querystring' );
 
 
 var server = http.createServer( function ( req, socket, head ) {
-  // req.setEncoding( 'utf-8' );
   var uri = req.url;
-
-  // console.log( req );
-  console.log( head );
-  // console.log( req.url );
 
   if ( req.method === 'POST' ) {
     console.log( "post detected" );
-    if ( uri === '/elements.html' ) {
-      return fs.readFile( './public/helium.html' , function ( err , data ) {
-        return fs.writeFile( './public' + uri , data , function( err, data ) {
-          return fs.readFile( './public' + uri , data , function( err, data ) {
+    req.on( 'data', function( buffer ) {
+      var dataBuffer = querystring.parse( buffer.toString() );
+      // console.log( dataBuffer );
+      if ( uri === '/elements' ) {
+        return fs.readFile( 'elementalTemplate.html' , function ( err , data ) {
+          return fs.writeFile( './public' + uri  + '.html', data , function( err, data ) {
+      console.log( dataBuffer.elementName ); //Boron
 
-            console.log( data.toString() );
-            req.on( 'data', function( buffer ) {
-              var dataBuffer = querystring.parse( buffer.toString() );
-              console.log( dataBuffer );
-            });
+          //access DOM elements and replace with req
 
-           socket.writeHead( 200, {
-            'Server' : 'Rizzi-lush',
-            'Content-length' : data.length
-          });
-          socket.end( data );
-          });
-        });
-      });
-    }
+          }); // end of fs.writeFile
+        }); //end of fs.readFile
+      } // end of if ( uri === '/elements' )
+    }); // end of req.on( 'data', function( buffer )
   }
 
   if ( req.method === 'GET' ) {
