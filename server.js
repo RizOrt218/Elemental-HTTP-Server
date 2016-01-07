@@ -11,14 +11,25 @@ var server = http.createServer( function ( req, socket, head ) {
     console.log( "post detected" );
     req.on( 'data', function( buffer ) {
       var dataBuffer = querystring.parse( buffer.toString() );
-      // console.log( dataBuffer );
+      console.log( dataBuffer );
+
       if ( uri === '/elements' ) {
-        return fs.readFile( 'elementalTemplate.html' , function ( err , data ) {
-          return fs.writeFile( './public' + uri  + '.html', data , function( err, data ) {
-      console.log( dataBuffer.elementName ); //Boron
+        return fs.readFile( 'elementalTemplate.html' , function ( err , template ) {
 
-          //access DOM elements and replace with req
+            var tempString = template.toString();
+            var renName = tempString.replace( '{{elementName}}', dataBuffer.elementName );
+            var renSymbol = renName.replace( '{{elementSymbol}}', dataBuffer.elementSymbol );
+            var renAtomicNum = renSymbol.replace( '{{elementAtomicNumber}}', dataBuffer.elementAtomicNumber );
+            var renDes = renAtomicNum.replace( '{{elementDescription}}', dataBuffer.elementDescription );
+            console.log( renDes );
 
+            socket.end( renDes );
+          return fs.writeFile( './public' + uri  + '.html', renDes , function( err, renDes ) {
+            socket.writeHead( 200, {
+              'Server' : 'Rizzi-lush',
+              // 'Content-length' : renDes.length
+            });
+            socket.end( renDes );
           }); // end of fs.writeFile
         }); //end of fs.readFile
       } // end of if ( uri === '/elements' )
