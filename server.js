@@ -8,7 +8,7 @@ var server = http.createServer( function ( req, socket, head ) {
   var uri = req.url;
 
   if ( req.method === 'POST' ) {
-    console.log( "post detected" );
+
     req.on( 'data', function( buffer ) {
       var dataBuffer = querystring.parse( buffer.toString() );
 
@@ -16,45 +16,44 @@ var server = http.createServer( function ( req, socket, head ) {
         return fs.readFile( 'elementalTemplate.html' , function ( err , template ) {
           var newFileName = dataBuffer.elementName;
 
-            var tempString = template.toString()
-              .replace( /{{elementName}}/g, dataBuffer.elementName )
-              .replace( '{{elementSymbol}}', dataBuffer.elementSymbol )
-              .replace( '{{elementAtomicNumber}}', dataBuffer.elementAtomicNumber )
-              .replace( '{{elementDescription}}', dataBuffer.elementDescription );
+          var tempString = template.toString()
+            .replace( /{{elementName}}/g, dataBuffer.elementName )
+            .replace( '{{elementSymbol}}', dataBuffer.elementSymbol )
+            .replace( '{{elementAtomicNumber}}', dataBuffer.elementAtomicNumber )
+            .replace( '{{elementDescription}}', dataBuffer.elementDescription );
 
-            if ( uri === '/elements' ) {
-              return fs.writeFile( './public' + '/' + newFileName  + '.html', tempString , function( err, tempString ) {
+          if ( uri === '/elements' ) {
 
-                socket.writeHead( 200, {
-                  'Server' : 'Rizzi-lush',
+            return fs.writeFile( './public/' + newFileName  + '.html', tempString , function( err, tempString ) {
+
+              socket.writeHead( 200, {
+                'Server' : 'Rizzi-lush',
+              });
+              socket.end( tempString );
+
+              return fs.readFile( 'indexTemplate.html', function ( err, contents ) {
+                var pageLink = '<li><a href="/{{elementName}}.html">{{elementName}}</a></li>';
+
+                var appendNewElem = contents.toString()
+                  .replace( '<!--  {{ element list }} -->', pageLink + '<!--  {{ element list }} -->' )
+                  .replace( /{{elementName}}/g, dataBuffer.elementName );
+
+                return fs.writeFile( './public/index.html', appendNewElem , function( err ) {
+                  fs.writeFile( 'indexTemplate.html', appendNewElem , function( err ) {
+                    //error finder
+                  });
+                  socket.writeHead( 200, {
+                    'Server' : 'Rizzi-lush',
+                   });
+                  socket.end( );
                 });
-                socket.end( tempString );
-
-                return fs.readFile( 'indexTemplate.html', function ( err, contents ) {
-                  var newList = '<li><a href="/{{elementName}}.html">{{elementName}}</a></li>';
-
-                  var appendNewElem = contents.toString()
-                    .replace( '<!--  {{ element list }} -->', newList + '<!--  {{ element list }} -->' )
-                    .replace( /{{elementName}}/g, dataBuffer.elementName );
-                    // .replace( '{{2}}', addOne );
-
-                  //if file newFileName does not exist
-                    return fs.writeFile( './public/index.html', appendNewElem , function( err ) {
-                      fs.writeFile( 'indexTemplate.html', appendNewElem , function( err ) {
-                        //error finder
-                      });
-                        socket.writeHead( 200, {
-                          'Server' : 'Rizzi-lush',
-                         });
-                      socket.end( );
-                    });
-                });
-              }); // end fs.writeFile
-            } // end if ( uri === '/elements' ) {
+              }); // end of return fs.readFile( 'index..
+            }); // end fs.writeFile
+          } // end if ( uri === '/elements' )
         }); //end of fs.readFile
       } // end of if ( uri === '/elements' )
     }); // end of req.on( 'data', function( buffer )
-  }
+  } // end of if ( req.metho ..
 
   if ( req.method === 'GET' ) {
     if ( uri === '/' ) {
@@ -65,7 +64,8 @@ var server = http.createServer( function ( req, socket, head ) {
         return fs.readFile( './public/404.html' , function ( err , data ) {
           socket.writeHead( 404, {
             'Server' : 'Rizzi-lush',
-            'Content-length' : data.length
+            'Content-length' : data.length,
+            'Message' : 'Please write a valid path'
           });
           socket.end( data );
         });
@@ -77,7 +77,7 @@ var server = http.createServer( function ( req, socket, head ) {
       socket.end( data );
     }); // end of fs.readFile
   } // GET method
-}); //end of server createServer( )
+}); // end of server createServer( )
 
 // grab a random port.
 server.listen( { port: 8080 }, function() {
