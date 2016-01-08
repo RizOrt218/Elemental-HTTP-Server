@@ -31,17 +31,23 @@ var server = http.createServer( function ( req, socket, head ) {
                 socket.end( tempString );
 
                 return fs.readFile( 'indexTemplate.html', function ( err, contents ) {
+                  var newList = '<li><a href="/{{elementName}}.html">{{elementName}}</a></li>';
 
                   var appendNewElem = contents.toString()
-                    .replace( /{{elementName}}/g, newFileName );
-                  console.log( appendNewElem);
-                  return fs.writeFile( './public/index.html', appendNewElem , function( err, appendNewElem ) {
+                    .replace( '<!--  {{ element list }} -->', newList + '<!--  {{ element list }} -->' )
+                    .replace( /{{elementName}}/g, dataBuffer.elementName );
+                    // .replace( '{{2}}', addOne );
 
-                    socket.writeHead( 200, {
-                      'Server' : 'Rizzi-lush',
+                  //if file newFileName does not exist
+                    return fs.writeFile( './public/index.html', appendNewElem , function( err ) {
+                      fs.writeFile( 'indexTemplate.html', appendNewElem , function( err ) {
+                        //error finder
+                      });
+                        socket.writeHead( 200, {
+                          'Server' : 'Rizzi-lush',
+                         });
+                      socket.end( );
                     });
-                    socket.end( appendNewElem );
-                  });
                 });
               }); // end fs.writeFile
             } // end if ( uri === '/elements' ) {
