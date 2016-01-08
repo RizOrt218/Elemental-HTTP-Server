@@ -40,7 +40,20 @@ var server = http.createServer( function ( req, socket, head ) {
 
                 return fs.writeFile( './public/index.html', appendNewElem , function( err ) {
                   fs.writeFile( 'indexTemplate.html', appendNewElem , function( err ) {
+                    console.log( appendNewElem ); //whole body chunk
                     //error finder
+                    //if file exist do not create new file
+                    var elementArr = [ 'hydrogen', 'helium' ];
+
+                    for ( var i = 0; i < elementArr.length; i++ ) {
+                      elementArr.push( newFileName );
+                      console.log( elementArr );
+                      break;
+                      // if ( elementArr.hasOwnProperty( newFileName )) {
+
+                      // }
+                    }
+
                   });
                   socket.writeHead( 200, {
                     'Server' : 'Rizzi-lush',
