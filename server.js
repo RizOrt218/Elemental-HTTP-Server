@@ -11,26 +11,26 @@ var server = http.createServer( function ( req, socket, head ) {
     console.log( "post detected" );
     req.on( 'data', function( buffer ) {
       var dataBuffer = querystring.parse( buffer.toString() );
-      console.log( dataBuffer );
 
       if ( uri === '/elements' ) {
         return fs.readFile( 'elementalTemplate.html' , function ( err , template ) {
+          var newFileName = dataBuffer.elementName;
 
-            var tempString = template.toString();
-            var renName = tempString.replace( '{{elementName}}', dataBuffer.elementName );
-            var renSymbol = renName.replace( '{{elementSymbol}}', dataBuffer.elementSymbol );
-            var renAtomicNum = renSymbol.replace( '{{elementAtomicNumber}}', dataBuffer.elementAtomicNumber );
-            var renDes = renAtomicNum.replace( '{{elementDescription}}', dataBuffer.elementDescription );
-            console.log( renDes );
+            var tempString = template.toString()
+              .replace( '{{elementName}}', dataBuffer.elementName )
+              .replace( '{{elementName}}', dataBuffer.elementName )
+              .replace( '{{elementSymbol}}', dataBuffer.elementSymbol )
+              .replace( '{{elementAtomicNumber}}', dataBuffer.elementAtomicNumber )
+              .replace( '{{elementDescription}}', dataBuffer.elementDescription );
 
-            socket.end( renDes );
-          return fs.writeFile( './public' + uri  + '.html', renDes , function( err, renDes ) {
-            socket.writeHead( 200, {
-              'Server' : 'Rizzi-lush',
-              // 'Content-length' : renDes.length
-            });
-            socket.end( renDes );
-          }); // end of fs.writeFile
+            if ( uri === '/elements' ) {
+              return fs.writeFile( './public' + '/' + newFileName  + '.html', tempString , function( err, tempString ) {
+                socket.writeHead( 200, {
+                  'Server' : 'Rizzi-lush',
+                });
+                socket.end( tempString );
+              }); // end fs.writeFile
+            } // end if ( uri === '/elements' ) {
         }); //end of fs.readFile
       } // end of if ( uri === '/elements' )
     }); // end of req.on( 'data', function( buffer )
