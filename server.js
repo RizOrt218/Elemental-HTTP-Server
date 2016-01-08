@@ -4,10 +4,13 @@ var url = require( 'url' );
 var querystring = require( 'querystring' );
 
 var elementArr = [ 'hydrogen', 'helium' ];
+var elemCount = 2;
 
 
 var server = http.createServer( function ( req, socket, head ) {
+  var newFileName;
   var uri = req.url;
+
 
   if ( req.method === 'POST' ) {
 
@@ -16,7 +19,7 @@ var server = http.createServer( function ( req, socket, head ) {
 
       if ( uri === '/elements' ) {
         return fs.readFile( 'elementalTemplate.html' , function ( err , template ) {
-          var newFileName = dataBuffer.elementName;
+          newFileName = dataBuffer.elementName;
 
           var tempString = template.toString()
             .replace( /{{elementName}}/g, dataBuffer.elementName )
@@ -35,27 +38,18 @@ var server = http.createServer( function ( req, socket, head ) {
 
               return fs.readFile( 'indexTemplate.html', function ( err, contents ) {
                 var pageLink = '<li><a href="/{{elementName}}.html">{{elementName}}</a></li>';
+                elemCount += 1;
 
                 var appendNewElem = contents.toString()
                   .replace( '<!--  {{ element list }} -->', pageLink + '<!--  {{ element list }} -->' )
-                  .replace( /{{elementName}}/g, dataBuffer.elementName );
+                  .replace( /{{elementName}}/g, dataBuffer.elementName )
+                  .replace( '<!-- number -->', elemCount+'<!-- number -->');
+                  console.log( 'replace meee' , elemCount);
 
                 return fs.writeFile( './public/index.html', appendNewElem , function( err ) {
                   fs.writeFile( 'indexTemplate.html', appendNewElem , function( err ) {
-                    console.log( appendNewElem ); //whole body chunk
-                    //error finder
-                    //if file exist do not create new file
 
-                    var elemExist = false;
-
-                    for ( var i = 0; i < elementArr.length; i++ ) {
-                      elementArr.push( newFileName );
-
-                      if ( elementArr[i] === newFileName ) {
-
-                      }
-
-                    }
+                    addElemInArr();
 
                   });
                   socket.writeHead( 200, {
@@ -93,7 +87,25 @@ var server = http.createServer( function ( req, socket, head ) {
       socket.end( data );
     }); // end of fs.readFile
   } // GET method
+
+
+function addElemInArr( ) {
+  var found = false;
+
+  for ( var i = 0; i < elementArr.length; i++ ) {
+    elementArr.push( newFileName );
+    found = true;
+
+    // elemCount += 1;
+  console.log( newFileName );
+  console.log( elementArr );
+  console.log( elemCount );
+    return found;
+  }
+} //end of addEleminArr
+
 }); // end of server createServer( )
+
 
 // grab a random port.
 server.listen( { port: 8080 }, function() {
