@@ -17,18 +17,32 @@ var server = http.createServer( function ( req, socket, head ) {
           var newFileName = dataBuffer.elementName;
 
             var tempString = template.toString()
-              .replace( '{{elementName}}', dataBuffer.elementName )
-              .replace( '{{elementName}}', dataBuffer.elementName )
+              .replace( /{{elementName}}/g, dataBuffer.elementName )
               .replace( '{{elementSymbol}}', dataBuffer.elementSymbol )
               .replace( '{{elementAtomicNumber}}', dataBuffer.elementAtomicNumber )
               .replace( '{{elementDescription}}', dataBuffer.elementDescription );
 
             if ( uri === '/elements' ) {
               return fs.writeFile( './public' + '/' + newFileName  + '.html', tempString , function( err, tempString ) {
+
                 socket.writeHead( 200, {
                   'Server' : 'Rizzi-lush',
                 });
                 socket.end( tempString );
+
+                return fs.readFile( 'indexTemplate.html', function ( err, contents ) {
+
+                  var appendNewElem = contents.toString()
+                    .replace( /{{elementName}}/g, newFileName );
+                  console.log( appendNewElem);
+                  return fs.writeFile( './public/index.html', appendNewElem , function( err, appendNewElem ) {
+
+                    socket.writeHead( 200, {
+                      'Server' : 'Rizzi-lush',
+                    });
+                    socket.end( appendNewElem );
+                  });
+                });
               }); // end fs.writeFile
             } // end if ( uri === '/elements' ) {
         }); //end of fs.readFile
