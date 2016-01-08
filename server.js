@@ -3,6 +3,8 @@ var fs = require( 'fs' );
 var url = require( 'url' );
 var querystring = require( 'querystring' );
 
+var elementArr = [ 'hydrogen', 'helium' ];
+
 
 var server = http.createServer( function ( req, socket, head ) {
   var uri = req.url;
@@ -43,15 +45,16 @@ var server = http.createServer( function ( req, socket, head ) {
                     console.log( appendNewElem ); //whole body chunk
                     //error finder
                     //if file exist do not create new file
-                    var elementArr = [ 'hydrogen', 'helium' ];
+
+                    var elemExist = false;
 
                     for ( var i = 0; i < elementArr.length; i++ ) {
                       elementArr.push( newFileName );
-                      console.log( elementArr );
-                      break;
-                      // if ( elementArr.hasOwnProperty( newFileName )) {
 
-                      // }
+                      if ( elementArr[i] === newFileName ) {
+
+                      }
+
                     }
 
                   });
