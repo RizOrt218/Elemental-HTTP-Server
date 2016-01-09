@@ -5,9 +5,9 @@ const fs            = require( 'fs' );
 const url           = require( 'url' );
 const querystring   = require( 'querystring' );
 const getFile       = require( './method/GET' );
-const postFile       = require( './method/POST' );
+const postFile      = require( './method/POST' );
 const putFile       = require( './method/PUT' );
-const deleteFile       = require( './method/DELETE' );
+const deleteFile    = require( './method/DELETE' );
 
 var server = http.createServer( ( request, respond ) => {
   request.setEncoding( 'utf-8' );
@@ -20,16 +20,18 @@ var server = http.createServer( ( request, respond ) => {
   });
 
   switch (request.method) {
+
     case 'GET':
-      return getFile.GET(req, res);
+      return getFile(request, respond);
     case 'POST':
-      return req.url !== '/elements' ? postFile.ERROR(null, req, res) : postFile.POST(req, res, postFile.ERROR);
+      return request.url !== '/elements' ? postFile.ERROR(null, request, respond) : postFile.POST(request, respond, postFile.ERROR);
     case 'PUT':
-      return putFile.PUT(req, res);
+      return putFile(request, respond);
     case 'DELETE':
-      return deleteFile.DELETE(req, res);
+      return deleteFile(request, respond);
     default:
-      return methodFile.ERROR(req, res);
+      return methodFile(request, respond);
+
   }
 
 });
