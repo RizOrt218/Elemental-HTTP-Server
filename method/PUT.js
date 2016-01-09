@@ -7,8 +7,8 @@ const url         = require( 'url' );
 const postMethod  = require( './POST');
 
 module.exports = (function() {
-  var newFileName;
-
+  var fileName = null;
+  var exist = false;
 
   var PUT = function  ( request, respond ){
     var uri = request.url + '.html'; //elements.html
@@ -17,40 +17,57 @@ module.exports = (function() {
 
     request.on( 'data', function (buffer) {
       var dataBuffer = querystring.parse( buffer.toString() );
-        newFileName = dataBuffer.elementName + '.html';
-        console.log( newFileName);
+        fileName = dataBuffer.elementName + '.html';
+
+      //reads directory and creates array of files in memory
+      fs.readdir( './public/', function (err, files) {
+
+        if ( err ) {
+          console.log( err );
+        }
+
+        //get rid of files we don't need in the array
+        var elementArr = files.filter( function ( e, i, arr ) {
+          return (
+              e !== '.keep' &&
+              e !== '404.html' &&
+              e !== 'index.html' &&
+              e !== 'css' )
+          });
+
+        //see if file already exist
+        if ( elementArr.indexOf( fileName ) !== -1 ) {
+          exist = true;
+        }
+
+        //create new file and save it on original file
+        if ( exist ) {
+          return fs.readFile( './templateFile/elementalTemplate.html', function ( err, template ) {
+
+            if ( err ) {
+              console.log ( 'error' );
+            }
+            //will replace template elements with new values
+            var renderTemplate = template.toString()
+              .replace( /{{elementName}}/g, dataBuffer.elementName )
+              .replace( '{{elementSymbol}}', dataBuffer.elementSymbol )
+              .replace( '{{elementAtomicNumber}}', dataBuffer.elementAtomicNumber )
+              .replace( '{{elementDescription}}', dataBuffer.elementDescription );
+
+            //override file with client's changes
+            return fs.writeFile( './public/' + fileName, renderTemplate, function ( err, template ) {
+                console.log( renderTemplate );
+              respond.writeHead( 200, { //do later
+                'Server' : 'Rizzi-lush',
+              });
+            });
+              // respond.end( renderTemplate );
+          }); // end fs.readFile
+        } else {
+          // return error
+        }
+      }); // end of fs readir
     })
-
-    //reads directory and creates array of files in memory
-    fs.readdir( './public/', function (err, files) {
-
-      if ( err ) {
-        console.log( err );
-      }
-
-      //get rid of files we don't need in the array
-      var elementArr = files.filter( function ( e, i, arr ) {
-        return (
-            e !== '.keep' &&
-            e !== '404.html' &&
-            e !== 'index.html' &&
-            e !== 'css' )
-      });
-        console.log( 'after', elementArr );
-
-      //loop through files and match put request to current array
-      for( var i = 0; i < elementArr.length; i++ ) {
-        if ( newFileName === elementArr[i] ) {
-          //replace file with current client's updates
-          postMethod ( request, respond );
-          break;
-        }
-        else {
-          console.log( 'use proper method' );
-        }
-      } // end of for loop
-    }) // end of fs readir
-
   };
   return PUT;
 }());
