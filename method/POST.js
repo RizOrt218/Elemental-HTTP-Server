@@ -21,7 +21,7 @@ module.exports = (function() {
       if ( uri === '/elements' ) {
 
         //when client creates a post, this will generate a new file with client's new post
-        return fs.readFile( './elementalTemplate.html' , function ( err , template ) {
+        return fs.readFile( './templateFile/elementalTemplate.html', function ( err , template ) {
 
           //getting the clients' new file name input
           newFileName = dataBuffer.elementName;

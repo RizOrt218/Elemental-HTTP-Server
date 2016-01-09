@@ -13,7 +13,7 @@ module.exports = (function() {
       var dataBuffer = querystring.parse( buffer.toString() );
 
       //** this will update the index with new element and element count
-      return fs.readFile( './indexTemplate.html', function ( err, contents ) {
+      return fs.readFile( './templateFile/indexTemplate.html', function ( err, contents ) {
         var pageLink = '<li><a href="/{{elementName}}.html">{{elementName}}</a></li>';
           elemCount += 1;
 
@@ -23,7 +23,7 @@ module.exports = (function() {
           .replace( /\d+<!-- number -->/, elemCount + '<!-- number -->');
 
         return fs.writeFile( './public/index.html', appendNewElem , function( err ) {
-          fs.writeFile( './indexTemplate.html', appendNewElem , function( err ) {
+          fs.writeFile( './templateFile/indexTemplate.html', appendNewElem , function( err ) {
             if ( err ) { //do later
               console.log ( 'error' );
             }
