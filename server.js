@@ -11,7 +11,6 @@ var server = http.createServer( function ( req, socket, head ) {
   var newFileName;
   var uri = req.url;
 
-
   if ( req.method === 'POST' ) {
 
     req.on( 'data', function( buffer ) {
@@ -43,12 +42,12 @@ var server = http.createServer( function ( req, socket, head ) {
                 var appendNewElem = contents.toString()
                   .replace( '<!--  {{ element list }} -->', pageLink + '<!--  {{ element list }} -->' )
                   .replace( /{{elementName}}/g, dataBuffer.elementName )
-                  .replace( '<!-- number -->', elemCount+'<!-- number -->');
-                  console.log( 'replace meee' , elemCount);
+                  .replace( /\d+<!-- number -->/, elemCount + '<!-- number -->');
 
                 return fs.writeFile( './public/index.html', appendNewElem , function( err ) {
                   fs.writeFile( 'indexTemplate.html', appendNewElem , function( err ) {
 
+                    console.log(tempString);
                     addElemInArr();
 
                   });
