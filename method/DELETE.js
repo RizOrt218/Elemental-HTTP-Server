@@ -8,7 +8,9 @@ const url         = require( 'url' );
 module.exporst = (function (){
 
   var DELETE = function ( request, respond ) {
-
+    //get client's respond
+    //look in the directory
+    //delete given file name from client
   };
   return DELETE;
 }());
