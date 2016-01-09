@@ -18,6 +18,7 @@ module.exports = (function() {
 
       //returns error file if path is invalid
       if ( err ) {
+
         return fs.readFile( './public/404.html', function( err, data ) {
           respond.writeHead( 404, {
             'Server' : 'Rizzi-lush',
@@ -25,6 +26,7 @@ module.exports = (function() {
           });
           respond.end( data );
         });
+
       }
 
       //loads file with proper path request
@@ -33,6 +35,7 @@ module.exports = (function() {
         'Content-length' : data.length
       });
       respond.end( data );
+
     }); // end of fs.readFile
   };
 
