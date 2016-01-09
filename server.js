@@ -3,7 +3,6 @@ var fs = require( 'fs' );
 var url = require( 'url' );
 var querystring = require( 'querystring' );
 
-var elementArr = [ 'hydrogen', 'helium' ];
 var elemCount = 2;
 
 
@@ -26,39 +25,36 @@ var server = http.createServer( function ( req, socket, head ) {
             .replace( '{{elementAtomicNumber}}', dataBuffer.elementAtomicNumber )
             .replace( '{{elementDescription}}', dataBuffer.elementDescription );
 
-          if ( uri === '/elements' ) {
+          return fs.writeFile( './public/' + newFileName  + '.html', tempString , function( err, tempString ) {
 
-            return fs.writeFile( './public/' + newFileName  + '.html', tempString , function( err, tempString ) {
+            socket.writeHead( 200, {
+              'Server' : 'Rizzi-lush',
+            });
+            socket.end( tempString );
 
-              socket.writeHead( 200, {
-                'Server' : 'Rizzi-lush',
-              });
-              socket.end( tempString );
+            return fs.readFile( 'indexTemplate.html', function ( err, contents ) {
+              var pageLink = '<li><a href="/{{elementName}}.html">{{elementName}}</a></li>';
+              elemCount += 1;
 
-              return fs.readFile( 'indexTemplate.html', function ( err, contents ) {
-                var pageLink = '<li><a href="/{{elementName}}.html">{{elementName}}</a></li>';
-                elemCount += 1;
+              var appendNewElem = contents.toString()
+                .replace( '<!--  {{ element list }} -->', pageLink + '<!--  {{ element list }} -->' )
+                .replace( /{{elementName}}/g, dataBuffer.elementName )
+                .replace( /\d+<!-- number -->/, elemCount + '<!-- number -->');
 
-                var appendNewElem = contents.toString()
-                  .replace( '<!--  {{ element list }} -->', pageLink + '<!--  {{ element list }} -->' )
-                  .replace( /{{elementName}}/g, dataBuffer.elementName )
-                  .replace( /\d+<!-- number -->/, elemCount + '<!-- number -->');
+              return fs.writeFile( './public/index.html', appendNewElem , function( err ) {
+                fs.writeFile( 'indexTemplate.html', appendNewElem , function( err ) {
 
-                return fs.writeFile( './public/index.html', appendNewElem , function( err ) {
-                  fs.writeFile( 'indexTemplate.html', appendNewElem , function( err ) {
+                  console.log(tempString);
+                  // addElemInArr();
 
-                    console.log(tempString);
-                    addElemInArr();
-
-                  });
-                  socket.writeHead( 200, {
-                    'Server' : 'Rizzi-lush',
-                   });
-                  socket.end( );
                 });
-              }); // end of return fs.readFile( 'index..
-            }); // end fs.writeFile
-          } // end if ( uri === '/elements' )
+                socket.writeHead( 200, {
+                  'Server' : 'Rizzi-lush',
+                 });
+                socket.end( );
+              });
+            }); // end of return fs.readFile( 'index..
+          }); // end fs.writeFile
         }); //end of fs.readFile
       } // end of if ( uri === '/elements' )
     }); // end of req.on( 'data', function( buffer )
@@ -88,20 +84,20 @@ var server = http.createServer( function ( req, socket, head ) {
   } // GET method
 
 
-function addElemInArr( ) {
-  var found = false;
+// function addElemInArr( ) {
+//   var found = false;
 
-  for ( var i = 0; i < elementArr.length; i++ ) {
-    elementArr.push( newFileName );
-    found = true;
+//   for ( var i = 0; i < elementArr.length; i++ ) {
+//     elementArr.push( newFileName );
+//     found = true;
 
-    // elemCount += 1;
-  console.log( newFileName );
-  console.log( elementArr );
-  console.log( elemCount );
-    return found;
-  }
-} //end of addEleminArr
+//     // elemCount += 1;
+//   console.log( newFileName );
+//   console.log( elementArr );
+//   console.log( elemCount );
+//     return found;
+//   }
+// } //end of addEleminArr
 
 }); // end of server createServer( )
 
