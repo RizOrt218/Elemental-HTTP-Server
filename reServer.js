@@ -12,25 +12,30 @@ const deleteFile    = require( './method/DELETE' );
 var server = http.createServer( ( request, respond ) => {
   request.setEncoding( 'utf-8' );
 
-  let body = null;
+  // let body = null;
 
-  request.on('data', (reqBody) => {
-    body = reqBody;
-    console.log( body );
-  });
+  // request.on('data', (reqBody) => {
+  //   body = reqBody;
+  //   console.log( body );
+  // });
 
   switch (request.method) {
 
     case 'GET':
-      return getFile(request, respond);
+      getFile( request, respond );
+      break;
     case 'POST':
-      return request.url !== '/elements' ? postFile.ERROR(null, request, respond) : postFile.POST(request, respond, postFile.ERROR);
+      console.log( 'this working?');
+      postFile( request, respond );
+      break;
     case 'PUT':
-      return putFile(request, respond);
+      putFile( request, respond );
+      break;
     case 'DELETE':
-      return deleteFile(request, respond);
+      deleteFile( request, respond );
+      break;
     default:
-      return methodFile(request, respond);
+      console.log('Invalid request method');
 
   }
 
