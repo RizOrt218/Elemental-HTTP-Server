@@ -1,8 +1,6 @@
 'use strict'
 
 const http          = require( 'http' );
-const fs            = require( 'fs' );
-const url           = require( 'url' );
 const querystring   = require( 'querystring' );
 const getFile       = require( './method/GET' );
 const postFile      = require( './method/POST' );
