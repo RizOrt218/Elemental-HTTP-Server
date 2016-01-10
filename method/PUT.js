@@ -9,14 +9,14 @@ module.exports = (function() {
   var fileName = null;
   var exist = false;
 
-  var PUT = function  ( request, respond ){
+  var PUT = function  (request, respond) {
     var uri = request.url + '.html'; //elements.html
 
     console.log( 'put request detected!' );
 
     request.on( 'data', function (buffer) {
       var dataBuffer = querystring.parse( buffer.toString() );
-        fileName = dataBuffer.elementName + '.html';
+        fileName = (dataBuffer.elementName + '.html').toLowerCase();
 
       //reads directory and creates array of files in memory
       fs.readdir( './public/', function (err, files) {
@@ -26,7 +26,7 @@ module.exports = (function() {
         }
 
         //get rid of files we don't need in the array
-        var elementArr = files.filter( function ( e, i, arr ) {
+        var elementArr = files.filter( function (e, i, arr) {
           return (
               e !== '.keep' &&
               e !== '404.html' &&
@@ -54,8 +54,8 @@ module.exports = (function() {
               .replace( '{{elementDescription}}', dataBuffer.elementDescription );
 
             //override file with client's changes
-            return fs.writeFile( './public/' + fileName, renderTemplate, function ( err, template ) {
-                console.log( renderTemplate );
+            return fs.writeFile( './public/' + fileName, renderTemplate, function (err) {
+
               respond.writeHead( 200, { //do later
                 'Server' : 'Rizzi-lush',
               });

@@ -5,11 +5,12 @@ const path        = require('path');
 const querystring = require( 'querystring' );
 const url         = require( 'url' );
 const updateIndex = require( '../templateFile/indexHandler' );
+const headHandler = require( './header' );
 
 //* TODO*//
 
 module.exports = (function() {
-  var newFileName;
+  var newFileName = null;
   var elemCount = 2;
 
   var POST = function ( request, respond ) {
@@ -26,7 +27,7 @@ module.exports = (function() {
         return fs.readFile( './templateFile/elementalTemplate.html', function ( err , template ) {
 
           //getting the clients' new file name input
-          newFileName = dataBuffer.elementName;
+          newFileName = (dataBuffer.elementName).toLowerCase();
 
           if ( err ) { //do later
             console.log( 'error' );
@@ -42,10 +43,12 @@ module.exports = (function() {
           //create brand new file with client's post
           return fs.writeFile( './public/' + newFileName + '.html', renderTemplate, function ( err ) {
 
-            respond.writeHead( 200, { //do later
-              'Server' : 'Rizzi-lush',
-            });
-            // respond.end( renderTemplate );
+            respond.writeHead( 200, {
+              'Content-Type' : 'application/json'
+             });
+               respond.end(JSON.stringify ({
+                'success' : true
+              }));
           }); // end fs.writeFile
         }); //end of fs.readFile
       } // end of if ( uri === '/elements' )
