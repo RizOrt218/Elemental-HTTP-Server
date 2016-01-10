@@ -10,13 +10,7 @@ const deleteFile    = require( './method/DELETE' );
 var server = http.createServer( ( request, respond ) => {
   request.setEncoding( 'utf-8' );
 
-  // let body = null;
-
-  // request.on('data', (reqBody) => {
-  //   body = reqBody;
-  //   console.log( body );
-  // });
-
+  //reads request method and invokes fn
   switch (request.method) {
 
     case 'GET':

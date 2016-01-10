@@ -1,7 +1,6 @@
 'use strict'
 
 const fs          = require('fs');
-const path        = require('path');
 const querystring = require( 'querystring' );
 const url         = require( 'url' );
 const postMethod  = require( './POST');
@@ -23,7 +22,7 @@ module.exports = (function() {
       fs.readdir( './public/', function (err, files) {
 
         if ( err ) {
-          console.log( err );
+          console.log( 'error' );
         }
 
         //get rid of files we don't need in the array
@@ -67,7 +66,7 @@ module.exports = (function() {
           // return error
         }
       }); // end of fs readir
-    })
-  };
+    }) // end of request.on
+  }; // end of PUT fn
   return PUT;
 }());

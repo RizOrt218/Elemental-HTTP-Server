@@ -1,7 +1,6 @@
 'use strict'
 
 const fs   = require('fs');
-const path = require('path');
 const url  = require( 'url' );
 
 module.exports = (function() {
@@ -29,7 +28,7 @@ module.exports = (function() {
 
       }
 
-      //loads file with proper path request
+      //creates header with proper path request
       respond.writeHead( 200, {
         'Server' : 'Rizzi-lush',
         'Content-length' : data.length
