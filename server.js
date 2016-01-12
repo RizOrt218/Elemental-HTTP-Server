@@ -17,7 +17,6 @@ var server = http.createServer( ( request, respond ) => {
       getFile( request, respond );
       break;
     case 'POST':
-      console.log( 'this working?');
       postFile( request, respond );
       break;
     case 'PUT':
