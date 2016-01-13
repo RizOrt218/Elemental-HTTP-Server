@@ -6,7 +6,7 @@ const querystring = require( 'querystring' );
 module.exports = (function() {
   var elemCount = 2;
 
-  var updateIndex = function( request, respond ) {
+  var updateIndex = function( request, response ) {
 
     request.on( 'data', function ( buffer ) {
       var dataBuffer = querystring.parse( buffer.toString() );
@@ -27,10 +27,10 @@ module.exports = (function() {
               console.log ( 'error' );
             }
           });
-          respond.writeHead( 200, {
+          response.writeHead( 200, {
             'Server' : 'Rizzi-lush',
            });
-          respond.end( );
+          response.end( );
         });
       }); // end of return fs.readFile(
     });

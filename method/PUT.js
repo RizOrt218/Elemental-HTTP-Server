@@ -3,13 +3,13 @@
 const fs          = require('fs');
 const querystring = require( 'querystring' );
 const url         = require( 'url' );
-const postMethod  = require( './POST');
+// const postMethod  = require( './POST');
 
 module.exports = (function() {
   var fileName = null;
   var exist = false;
 
-  var PUT = function  (request, respond) {
+  var PUT = function  (request, response) {
     var uri = request.url + '.html'; //elements.html
 
     request.on( 'data', function (buffer) {
@@ -54,14 +54,14 @@ module.exports = (function() {
             //override file with client's changes
             return fs.writeFile( './public/' + fileName, renderTemplate, function (err) {
 
-              respond.writeHead( 200, { //do later
+              response.writeHead( 200, { //do later
                 'Server' : 'Rizzi-lush',
               });
-                respond.end(JSON.stringify ({
+                response.end(JSON.stringify ({
                  'success' : true
                }));
             });
-              // respond.end( renderTemplate );
+              // response.end( renderTemplate );
           }); // end fs.readFile
         } else {
           // return error

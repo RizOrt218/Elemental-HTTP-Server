@@ -12,7 +12,7 @@ module.exports = (function() {
   var newFileName = null;
   var elemCount = 2;
 
-  var POST = function ( request, respond ) {
+  var POST = function ( request, response ) {
     var uri = request.url;
 
     //lets find out what the client is posting
@@ -42,10 +42,10 @@ module.exports = (function() {
           //create brand new file with client's post
           return fs.writeFile( './public/' + newFileName + '.html', renderTemplate, function ( err ) {
 
-            respond.writeHead( 200, {
+            response.writeHead( 200, {
               'Server' : 'Rizzi-lush',
              });
-               respond.end(JSON.stringify ({
+               response.end(JSON.stringify ({
                 'success' : true
               }));
           }); // end fs.writeFile
@@ -54,7 +54,7 @@ module.exports = (function() {
     });
 
     //invoke to update index file
-    updateIndex(request, respond);
+    updateIndex(request, response);
 
   }; // end of POST function
 

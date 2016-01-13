@@ -7,9 +7,9 @@ const url         = require( 'url' );
 
 module.exports = (function () {
 
-  var createHead = function (request, respond) {
+  var createHead = function (request, response) {
 
-    respond.writeHead( 200, {
+    response.writeHead( 200, {
       'Server' : 'Rizzi',
       'Success': 'true',
     })

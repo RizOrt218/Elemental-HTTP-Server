@@ -6,23 +6,23 @@ const postFile      = require( './method/POST' );
 const putFile       = require( './method/PUT' );
 const deleteFile    = require( './method/DELETE' );
 
-var server = http.createServer( ( request, respond ) => {
+var server = http.createServer( ( request, response ) => {
   request.setEncoding( 'utf-8' );
 
   //reads request method and invokes fn
   switch (request.method) {
 
     case 'GET':
-      getFile( request, respond );
+      getFile( request, response );
       break;
     case 'POST':
-      postFile( request, respond );
+      postFile( request, response );
       break;
     case 'PUT':
-      putFile( request, respond );
+      putFile( request, response );
       break;
     case 'DELETE':
-      deleteFile( request, respond );
+      deleteFile( request, response );
       break;
     default:
       console.log('Invalid request method');

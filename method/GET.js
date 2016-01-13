@@ -5,7 +5,7 @@ const url  = require( 'url' );
 
 module.exports = (function() {
 
-  var GET = function( request, respond ){
+  var GET = function( request, response ){
 
     let uri = request.url;
 
@@ -19,20 +19,20 @@ module.exports = (function() {
       if ( err ) {
 
         return fs.readFile( './public/404.html', function( err, data ) {
-          respond.writeHead( 404, {
+          response.writeHead( 404, {
             'Server' : 'Rizzi-lush',
             'Message' : 'Please enter a valid path'
           });
-          respond.end( data );
+          response.end( data );
         });
       }
 
       //creates header with proper path request
-      respond.writeHead( 200, {
+      response.writeHead( 200, {
         'Server' : 'Rizzi-lush',
         'Content-length' : data.length
       });
-        respond.end(JSON.stringify ({
+        response.end(JSON.stringify ({
          'success' : true
        }));
     }); // end of fs.readFile
