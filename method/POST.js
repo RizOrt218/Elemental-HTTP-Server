@@ -1,7 +1,6 @@
 'use strict'
 
 const fs          = require('fs');
-const path        = require('path');
 const querystring = require( 'querystring' );
 const url         = require( 'url' );
 const updateIndex = require( '../templateFile/indexHandler' );

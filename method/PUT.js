@@ -12,8 +12,6 @@ module.exports = (function() {
   var PUT = function  (request, respond) {
     var uri = request.url + '.html'; //elements.html
 
-    console.log( 'put request detected!' );
-
     request.on( 'data', function (buffer) {
       var dataBuffer = querystring.parse( buffer.toString() );
         fileName = (dataBuffer.elementName + '.html').toLowerCase();
