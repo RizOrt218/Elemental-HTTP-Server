@@ -27,14 +27,14 @@ module.exports = (function() {
         });
       }
 
+      console.log("GET")
       //creates header with proper path request
       response.writeHead( 200, {
         'Server' : 'Rizzi-lush',
         'Content-length' : data.length
       });
-        response.end(JSON.stringify ({
-         'success' : true
-       }));
+
+      response.end(data);
     }); // end of fs.readFile
   };
 
