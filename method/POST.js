@@ -44,7 +44,7 @@ module.exports = (function() {
           return fs.writeFile( './public/' + newFileName + '.html', renderTemplate, function ( err ) {
 
             respond.writeHead( 200, {
-              'Content-Type' : 'application/json'
+              'Server' : 'Rizzi-lush',
              });
                respond.end(JSON.stringify ({
                 'success' : true

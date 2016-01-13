@@ -25,7 +25,6 @@ module.exports = (function() {
           });
           respond.end( data );
         });
-
       }
 
       //creates header with proper path request
@@ -33,8 +32,9 @@ module.exports = (function() {
         'Server' : 'Rizzi-lush',
         'Content-length' : data.length
       });
-      respond.end( data );
-
+        respond.end(JSON.stringify ({
+         'success' : true
+       }));
     }); // end of fs.readFile
   };
 

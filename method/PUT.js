@@ -59,6 +59,9 @@ module.exports = (function() {
               respond.writeHead( 200, { //do later
                 'Server' : 'Rizzi-lush',
               });
+                respond.end(JSON.stringify ({
+                 'success' : true
+               }));
             });
               // respond.end( renderTemplate );
           }); // end fs.readFile
