@@ -6,7 +6,7 @@ const url  = require( 'url' );
 module.exports = (function() {
 
   var GET = function( request, respond ){
-    console.log( 'get request detected!')
+
     let uri = request.url;
 
     //redirects client if path is / or empty string
